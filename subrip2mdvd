@@ -1,0 +1,58 @@
+#!/usr/bin/python
+from optparse import OptionParser
+from sys import stdin, stdout
+import re
+import codecs
+
+oparser = OptionParser(usage = '%prog [-i INPUT-ENCODING] [-o OUTPUT-ENCODING] [-l LINE-ENDINGS] [-f FPS]')
+oparser.add_option('-i', '--input-encoding', dest='input_encoding', default='UTF-8')
+oparser.add_option('-o', '--output-encoding', dest='output_encoding', default='UTF-8')
+oparser.add_option('-l', '--line-endings', dest='line_endings', type='choice', choices=('CR', 'LF', 'CRLF', 'dos', 'unix', 'mac'), default='unix')
+oparser.add_option('-f', '--fps', dest='fps', type='float', default=25.0)
+options = oparser.parse_args()[0]
+
+stdin = codecs.getreader(options.input_encoding)(stdin)
+stdout = codecs.getwriter(options.output_encoding)(stdout)
+line_endings = dict(
+  CR = '\r',
+  LF = '\n',
+  CRLF = '\r\n',
+  dos = '\r\n',
+  unix = '\n',
+  mac = '\r'
+)[options.line_endings]
+fps = options.fps
+
+TIMING_RE = re.compile('^(\d\d):(\d\d):(\d\d),(\d\d\d) --> (\d\d):(\d\d):(\d\d),(\d\d\d)$').match
+EMPTY_RE = re.compile('^\s*$').match
+
+next_line = stdin.next
+lines = []
+force_break = False
+
+while True:
+	try:
+		st_no = int(next_line())
+	except StopIteration:
+		break
+	m = TIMING_RE(next_line())
+	if not m:
+		raise SyntaxError
+	else:
+		time_fr = int(m.group(4)) * 0.0001 + int(m.group(3)) + 60 * (int(m.group(2)) + 60 * int(m.group(1)))
+		time_to = int(m.group(8)) * 0.0001 + int(m.group(7)) + 60 * (int(m.group(6)) + 60 * int(m.group(5)))
+		time_fr = int(time_fr * fps)
+		time_to = int(time_to * fps)
+	while True:
+		try:
+			line = next_line()
+		except StopIteration:
+			line = ''
+		if EMPTY_RE(line):
+			stdout.write('{%d}{%d}%s%s' % (time_fr, time_to, '|'.join(lines), line_endings))
+			lines = []
+			break
+		else:
+			lines += line.strip(),
+
+# vim:ts=4 sw=4 noet
