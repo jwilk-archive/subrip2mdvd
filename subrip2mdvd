@@ -35,9 +35,10 @@ while True:
 		st_no = int(next_line())
 	except StopIteration:
 		break
-	m = TIMING_RE(next_line())
+	line = next_line()
+	m = TIMING_RE(line)
 	if not m:
-		raise SyntaxError
+		raise SyntaxError(line)
 	else:
 		time_fr = int(m.group(4)) * 0.0001 + int(m.group(3)) + 60 * (int(m.group(2)) + 60 * int(m.group(1)))
 		time_to = int(m.group(8)) * 0.0001 + int(m.group(7)) + 60 * (int(m.group(6)) + 60 * int(m.group(5)))
