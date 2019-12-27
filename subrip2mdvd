@@ -5,8 +5,8 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
-import re
 import io
+import re
 import sys
 
 b''  # Python >= 2.6 is required
