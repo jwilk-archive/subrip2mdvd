@@ -15,12 +15,12 @@ options = ap.parse_args()
 stdin = io.open(sys.stdin.fileno(), 'rt', encoding=options.input_encoding)
 stdout = io.open(sys.stdout.fileno(), 'wt', encoding=options.output_encoding)
 line_endings = dict(
-  CR = '\r',
-  LF = '\n',
-  CRLF = '\r\n',
-  dos = '\r\n',
-  unix = '\n',
-  mac = '\r'
+    CR = '\r',
+    LF = '\n',
+    CRLF = '\r\n',
+    dos = '\r\n',
+    unix = '\n',
+    mac = '\r'
 )[options.line_endings]
 fps = options.fps
 
