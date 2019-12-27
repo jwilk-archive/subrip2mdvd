@@ -31,29 +31,29 @@ lines = []
 force_break = False
 
 while True:
-	try:
-		st_no = int(next_line())
-	except StopIteration:
-		break
-	line = next_line()
-	m = TIMING_RE(line)
-	if not m:
-		raise SyntaxError(line)
-	else:
-		time_fr = int(m.group(4)) * 0.0001 + int(m.group(3)) + 60 * (int(m.group(2)) + 60 * int(m.group(1)))
-		time_to = int(m.group(8)) * 0.0001 + int(m.group(7)) + 60 * (int(m.group(6)) + 60 * int(m.group(5)))
-		time_fr = int(time_fr * fps)
-		time_to = int(time_to * fps)
-	while True:
-		try:
-			line = next_line()
-		except StopIteration:
-			line = ''
-		if EMPTY_RE(line):
-			stdout.write('{%d}{%d}%s%s' % (time_fr, time_to, '|'.join(lines), line_endings))
-			lines = []
-			break
-		else:
-			lines += line.strip(),
+    try:
+        st_no = int(next_line())
+    except StopIteration:
+        break
+    line = next_line()
+    m = TIMING_RE(line)
+    if not m:
+        raise SyntaxError(line)
+    else:
+        time_fr = int(m.group(4)) * 0.0001 + int(m.group(3)) + 60 * (int(m.group(2)) + 60 * int(m.group(1)))
+        time_to = int(m.group(8)) * 0.0001 + int(m.group(7)) + 60 * (int(m.group(6)) + 60 * int(m.group(5)))
+        time_fr = int(time_fr * fps)
+        time_to = int(time_to * fps)
+    while True:
+        try:
+            line = next_line()
+        except StopIteration:
+            line = ''
+        if EMPTY_RE(line):
+            stdout.write('{%d}{%d}%s%s' % (time_fr, time_to, '|'.join(lines), line_endings))
+            lines = []
+            break
+        else:
+            lines += line.strip(),
 
-# vim:ts=4 sw=4 noet
+# vim:ts=4 sw=4 et
