@@ -9,6 +9,8 @@ import re
 import io
 import sys
 
+b''  # Python >= 2.6 is required
+
 ap = argparse.ArgumentParser()
 ap.add_argument('-i', '--input-encoding', dest='input_encoding', default='UTF-8')
 ap.add_argument('-o', '--output-encoding', dest='output_encoding', default='UTF-8')
