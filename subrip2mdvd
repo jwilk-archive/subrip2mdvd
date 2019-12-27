@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 from optparse import OptionParser
-from sys import stdin, stdout
 import re
-import codecs
+import io
+import sys
 
 oparser = OptionParser(usage = '%prog [-i INPUT-ENCODING] [-o OUTPUT-ENCODING] [-l LINE-ENDINGS] [-f FPS]')
 oparser.add_option('-i', '--input-encoding', dest='input_encoding', default='UTF-8')
@@ -12,8 +12,8 @@ oparser.add_option('-l', '--line-endings', dest='line_endings', type='choice', c
 oparser.add_option('-f', '--fps', dest='fps', type='float', default=25.0)
 options = oparser.parse_args()[0]
 
-stdin = codecs.getreader(options.input_encoding)(stdin)
-stdout = codecs.getwriter(options.output_encoding)(stdout)
+stdin = io.open(sys.stdin.fileno(), 'rt', encoding=options.input_encoding)
+stdout = io.open(sys.stdout.fileno(), 'wt', encoding=options.output_encoding)
 line_endings = dict(
   CR = '\r',
   LF = '\n',
@@ -51,7 +51,7 @@ while True:
         except StopIteration:
             line = ''
         if EMPTY_RE(line):
-            stdout.write('{%d}{%d}%s%s' % (time_fr, time_to, '|'.join(lines), line_endings))
+            stdout.write('{%d}{%d}%s%s' % (time_fr, time_to, u'|'.join(lines), line_endings))
             lines = []
             break
         else:
